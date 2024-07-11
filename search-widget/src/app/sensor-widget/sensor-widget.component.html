@@ -1,0 +1,90 @@
+<div class="search-widget">
+  <mat-form-field appearance="fill">
+    <mat-label>Search</mat-label>
+    <input matInput type="text" (input)="filterSensors($event)" />
+  </mat-form-field>
+
+  <mat-accordion>
+    <mat-expansion-panel #zonesPanel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon>grid_view</mat-icon> <mat-checkbox></mat-checkbox> Zones
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-accordion *ngIf="zonesPanel.expanded">
+        <mat-expansion-panel *ngFor="let zone of filteredZones" #zonePanel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon>layers</mat-icon> <mat-checkbox></mat-checkbox> {{ zone.name }}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div *ngIf="zonePanel.expanded">
+            <div *ngFor="let camera of zone.cameras" class="camera-item">
+              <mat-card class="sensor-item" [ngClass]="getConnectionClass(camera.connection)">
+                <mat-card-title>
+                  <mat-icon>videocam</mat-icon> <mat-checkbox></mat-checkbox> {{ camera.name }}
+                  <span class="camera-status" [ngStyle]="{'background-color': getConnectionColor(camera.connection)}">{{ camera.connection }}</span>
+                </mat-card-title>
+              </mat-card>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel #sitesPanel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon>place</mat-icon> <mat-checkbox></mat-checkbox> Sites
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-accordion *ngIf="sitesPanel.expanded">
+        <mat-expansion-panel *ngFor="let site of filteredSites" #sitePanel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon>location_on</mat-icon> <mat-checkbox></mat-checkbox> {{ site.name }}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel #placemarksPanel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon>bookmark</mat-icon> <mat-checkbox></mat-checkbox> Placemarks
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-accordion *ngIf="placemarksPanel.expanded">
+        <mat-expansion-panel *ngFor="let placemark of filteredPlacemarks" #placemarkPanel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon>bookmark_border</mat-icon> <mat-checkbox></mat-checkbox> {{ placemark.name }}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel #layersPanel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon>layers</mat-icon> <mat-checkbox></mat-checkbox> Layers
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-accordion *ngIf="layersPanel.expanded">
+        <mat-expansion-panel *ngFor="let layer of filteredLayers" #layerPanel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon>layers</mat-icon> <mat-checkbox></mat-checkbox> {{ layer.name }}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <div *ngIf="filteredZones.length === 0 && filteredSites.length === 0 && filteredPlacemarks.length === 0 && filteredLayers.length === 0">
+    No results found.
+  </div>
+</div>
